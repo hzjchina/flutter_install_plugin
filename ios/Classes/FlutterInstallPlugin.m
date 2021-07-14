@@ -38,15 +38,21 @@
   UIApplication *application = [UIApplication sharedApplication];
   NSURL *URL = [NSURL URLWithString:scheme];
  
-  if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
-    [application openURL:URL options:@{}
-       completionHandler:^(BOOL success) {
-      NSLog(@"Open %@: %d",scheme,success);
-    }];
-  } else {
-    BOOL success = [application openURL:URL];
-    NSLog(@"Open %@: %d",scheme,success);
-  }
+ if(@available(iOS 10, *)){
+	 if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+		[application openURL:URL options:@{}
+		   completionHandler:^(BOOL success) {
+		  NSLog(@"Open1 %@: %d",scheme,success);
+		}];
+	  } else {
+		BOOL success = [application openURL:URL];
+		NSLog(@"Open2 %@: %d",scheme,success);
+	  }
+ }else{
+  [application openURL:URL];
+  NSLog(@"FlutterInstallPlugin urlString4: %@",scheme);
+ }
+  
 }
 
 @end
