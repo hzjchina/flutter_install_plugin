@@ -19,15 +19,14 @@
 		
 		if(urlString == nil) {
 			result([FlutterError errorWithCode:@"urlString" message:@"urlString is null" details:NULL]);
-		
 		}else{
-			NSLog(@"FlutterInstallPlugin urlString: %@",urlString);
+			NSLog(@"FlutterInstallPlugin urlString2: %@",urlString);
 			//NSURL *url= [NSURL URLWithString:urlString];
 			//[[UIApplication sharedApplication]openURL:[NSURLURLWithString:url]];
 			[self openScheme:urlString];
 		}
-	   } 
-	   @catch(FlutterError *e) {
+	   } @catch(FlutterError *e) {
+		NSLog(@"FlutterInstallPlugin urlString3: %@",urlString);
 		  result(e);
 	   }
   } else {
