@@ -45,7 +45,6 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
     }
   }
 
-
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
       "getPlatformVersion" -> {
@@ -62,7 +61,44 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
           result.error(e.javaClass.simpleName, e.message, null)
         }
       }
+
+      "gotoAndroidMarket" -> {
+        try {
+          val marketPackageName = call.argument<String>("marketPackageName")
+//          val marketClassName = call.argument<String>("marketClassName")
+          Log.d("android plugin", "gotoAndroidMarket $marketPackageName ")
+          toMarket(marketPackageName)
+        } catch (e: Throwable) {
+          result.error(e.javaClass.simpleName, e.message, null)
+        }
+      }
       else -> result.notImplemented()
+    }
+  }
+
+  private fun toMarket(marketPackageName: String?) {
+    val activity: Activity =
+            registrar.activity() ?: throw NullPointerException("context is null!")
+    var packageInfo = activity.packageManager.getPackageInfo(activity.packageName, 0)
+    try {
+      /**
+      * 去指定的应用市场
+      * */
+      val uri = Uri.parse("market://details?id=${packageInfo.packageName}")
+      val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+      goToMarket.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      if (marketPackageName != null && marketPackageName.isNotEmpty()) {
+        goToMarket.setPackage(marketPackageName)
+      }
+      activity.startActivity(goToMarket)
+    }catch (e: Throwable){
+      /**
+       * 打开Google play 页面
+       */
+      val uri2 = Uri.parse("https://play.google.com/store/apps/details?id=${packageInfo.packageName}")
+      val goToMarket2 = Intent(Intent.ACTION_VIEW, uri2)
+      goToMarket2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      activity.startActivity(goToMarket2)
     }
   }
 

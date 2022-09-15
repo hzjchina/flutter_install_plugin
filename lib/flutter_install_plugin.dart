@@ -22,4 +22,10 @@ class FlutterInstallPlugin {
     Map<String, String> params = {'urlString': urlString};
     return await _channel.invokeMethod('gotoAppStore', params);
   }
+
+  /// for android: go to market by market package name
+  static Future<String> gotoAndroidMarket(String marketPackageName) async {
+    Map<String, String> params = {'marketPackageName': marketPackageName};
+    return await _channel.invokeMethod('gotoAndroidMarket', params);
+  }
 }
