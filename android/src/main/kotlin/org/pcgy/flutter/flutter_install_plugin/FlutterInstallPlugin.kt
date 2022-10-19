@@ -31,10 +31,10 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
       val installPlugin = FlutterInstallPlugin(registrar)
       channel.setMethodCallHandler(installPlugin)
       registrar.addActivityResultListener { requestCode, resultCode, intent ->
-        Log.d(
-                "ActivityResultListener",
-                "requestCode=$requestCode, resultCode = $resultCode, intent = $intent"
-        )
+//        Log.d(
+//                "ActivityResultListener",
+//                "requestCode=$requestCode, resultCode = $resultCode, intent = $intent"
+//        )
         if (resultCode == Activity.RESULT_OK && requestCode == installRequestCode) {
           installPlugin.install24(registrar.context(), apkFile, appId)
           true
@@ -53,7 +53,7 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
       "installApk" -> {
         val filePath = call.argument<String>("filePath")
         val appId = call.argument<String>("appId")
-        Log.d("android plugin", "installApk $filePath $appId")
+        //Log.d("android plugin", "installApk $filePath $appId")
         try {
           installApk(filePath, appId)
           result.success("Success")
@@ -66,7 +66,7 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
         try {
           val marketPackageName = call.argument<String>("marketPackageName")
 //          val marketClassName = call.argument<String>("marketClassName")
-          Log.d("android plugin", "gotoAndroidMarket $marketPackageName ")
+          //Log.d("android plugin", "gotoAndroidMarket $marketPackageName ")
           toMarket(marketPackageName)
         } catch (e: Throwable) {
           result.error(e.javaClass.simpleName, e.message, null)
@@ -82,7 +82,7 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
     var packageInfo = activity.packageManager.getPackageInfo(activity.packageName, 0)
     try {
       /**
-      * 去指定的应用市场
+      * 去指定的应用市场 如果没有指定就打开任何应用市场
       * */
       val uri = Uri.parse("market://details?id=${packageInfo.packageName}")
       val goToMarket = Intent(Intent.ACTION_VIEW, uri)
@@ -124,7 +124,7 @@ class FlutterInstallPlugin(private val registrar: Registrar): MethodCallHandler 
 
   private fun showSettingPackageInstall(activity: Activity) { // todo to test with android 26
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      Log.d("SettingPackageInstall", ">= Build.VERSION_CODES.O")
+      //Log.d("SettingPackageInstall", ">= Build.VERSION_CODES.O")
       val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
       intent.data = Uri.parse("package:" + activity.packageName)
       activity.startActivityForResult(intent, installRequestCode)
